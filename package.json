@@ -1,0 +1,18 @@
+{
+  "name": "backend-stub-api",
+  "version": "1.0.0",
+  "description": "Stub APIs for login and logout",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "uuid": "^10.0.0"
+  }
+}
