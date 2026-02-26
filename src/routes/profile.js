@@ -30,7 +30,7 @@ router.get("/me", (req, res) => {
     });
   }
 
-  // For now, return a stubbed profile using session info and static fields.
+  // For now, returning a stubbed profile using session info and static fields.
   const profile = {
     id: session.userId,
     username: session.username,
