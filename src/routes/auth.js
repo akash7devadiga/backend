@@ -16,7 +16,7 @@ const STUB_USERS = [
     mustChangePassword: false,
   },
   {
-    username: "user@example.com",
+    username: "userexample.com",
     email: "user@example.com",
     password: "password",
     userId: "stub-user-2",
@@ -27,6 +27,7 @@ const STUB_USERS = [
   { username: "acg.admin", password: "Admin@1234", userId: "user-acg-admin", email: "acg.admin@example.com", mustChangePassword: true },
   { username: "client.user", password: "Client@123", userId: "user-client", email: "client.user@example.com", mustChangePassword: true },
   { username: "dummy", password: "dummy12345", userId: "user-dummy", email: "dummy@example.com", mustChangePassword: false },
+  { username: "akash.devadiga", password: "Welcome@1234", userId: "user-akash", email: "akash.devadiga@example.com", mustChangePassword: true },
 ];
 
 function findStubUser(loginId, password) {
