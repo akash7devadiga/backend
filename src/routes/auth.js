@@ -5,6 +5,7 @@
 const express = require("express");
 const router = express.Router();
 const { createSession, getSession, deleteSession } = require("../store/sessionStore");
+const requireSession = require("../middleware/requireSession");
 
 /** Stub users: username or email - { password, user, mustChangePassword? } */
 const STUB_USERS = [
@@ -116,28 +117,8 @@ router.post("/logout", (req, res) => {
  * Authorization: Bearer <sessionId>
  * Returns: 200 { success, data: { user } } or 401
  */
-router.get("/me", (req, res) => {
-  const auth = req.headers.authorization;
-  const sessionId =
-    auth && auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-
-  console.log("[AUTH] me request", { hasSessionId: !!sessionId });
-  if (!sessionId) {
-    console.log("[AUTH] me failed", { reason: "missing_authorization" });
-    return res.status(401).json({
-      success: false,
-      message: "Missing or invalid authorization",
-    });
-  }
-
-  const session = getSession(sessionId);
-  if (!session) {
-    console.log("[AUTH] me failed", { reason: "session_invalid_or_expired" });
-    return res.status(401).json({
-      success: false,
-      message: "Session expired or invalid",
-    });
-  }
+router.get("/me", requireSession, (req, res) => {
+  const session = req.session;
 
   console.log("[AUTH] me success", { userId: session.userId, username: session.username });
   return res.status(200).json({
@@ -158,30 +139,8 @@ router.get("/me", (req, res) => {
  * Body: { currentPassword, newPassword }
  * Returns: 200 { success, message } or 400 (validation) or 401 (unauthorized)
  */
-router.post("/change-password", (req, res) => {
-  const auth = req.headers.authorization;
-  const sessionId =
-    auth && auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-
-  console.log("[AUTH] change-password request", { hasSessionId: !!sessionId });
-
-  if (!sessionId) {
-    console.log("[AUTH] change-password failed", { reason: "missing_authorization" });
-    return res.status(401).json({
-      success: false,
-      message: "Missing or invalid authorization",
-    });
-  }
-
-  const session = getSession(sessionId);
-  if (!session) {
-    console.log("[AUTH] change-password failed", { reason: "session_invalid_or_expired" });
-    return res.status(401).json({
-      success: false,
-      message: "Session expired or invalid",
-    });
-  }
-
+router.post("/change-password", requireSession, (req, res) => {
+  const session = req.session;
   const currentPassword = (req.body.currentPassword ?? "").trim();
   const newPassword = (req.body.newPassword ?? "").trim();
 

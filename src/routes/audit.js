@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getSession } = require("../store/sessionStore");
+const requireSession = require("../middleware/requireSession");
 
 // Stub audit log entries (same shape as frontend mock for now)
 const STUB_AUDIT_LOGS = [
@@ -21,28 +21,8 @@ const STUB_AUDIT_LOGS = [
  * Authorization: Bearer <sessionId>
  * Returns: 200 { success, data: { logs } } or 401
  */
-router.get("/logs", (req, res) => {
-  const auth = req.headers.authorization || "";
-  const sessionId = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-
-  console.log("[AUDIT] /logs request", { hasSessionId: !!sessionId });
-
-  if (!sessionId) {
-    console.log("[AUDIT] /logs failed", { reason: "missing_authorization" });
-    return res.status(401).json({
-      success: false,
-      message: "Missing or invalid authorization",
-    });
-  }
-
-  const session = getSession(sessionId);
-  if (!session) {
-    console.log("[AUDIT] /logs failed", { reason: "session_invalid_or_expired" });
-    return res.status(401).json({
-      success: false,
-      message: "Session expired or invalid",
-    });
-  }
+router.get("/logs", requireSession, (req, res) => {
+  const session = req.session;
 
   console.log("[AUDIT] /logs success", { userId: session.userId, username: session.username, count: STUB_AUDIT_LOGS.length });
   return res.status(200).json({
