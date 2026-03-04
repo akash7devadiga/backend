@@ -33,5 +33,5 @@ app.use("/api/return-serials", returnSerialsRoutes);
 
 app.listen(PORT, () => {
   console.log("[SERVER] Stub API server started", { port: PORT, baseUrl: `http://localhost:${PORT}` });
-  console.log("[SERVER] Routes: GET /health, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, POST /api/auth/change-password, GET /api/profile/me, GET /api/system/info, GET /api/audit/logs, POST /api/manual-upload, GET /api/return-serials/orders, POST /api/return-serials/return");
+  console.log("[SERVER] Routes: GET /health, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, POST /api/auth/change-password, GET /api/profile/me, GET /api/system/info, GET /api/audit/logs, GET /api/manual-upload/orders, POST /api/manual-upload, GET /api/return-serials/orders, POST /api/return-serials/return");
 });
