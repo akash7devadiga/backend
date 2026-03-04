@@ -5,6 +5,9 @@
 
 const { v4: uuidv4 } = require("uuid");
 
+/** Session lifetime in milliseconds (e.g. 30 minutes). */
+const SESSION_TTL_MS = 30 * 60 * 1000;
+
 /** @type {Map<string, { userId: string, email: string, username: string, createdAt: number }>} */
 const sessions = new Map();
 
@@ -32,7 +35,36 @@ function createSession(user) {
  */
 function getSession(sessionId) {
   const session = sessions.get(sessionId);
-  console.log("[SESSION] getSession", { sessionId: sessionId ? `${sessionId.slice(0, 8)}...` : "(empty)", found: !!session });
+  const now = Date.now();
+
+  if (!session) {
+    console.log("[SESSION] getSession", {
+      sessionId: sessionId ? `${sessionId.slice(0, 8)}...` : "(empty)",
+      found: false,
+    });
+    return undefined;
+  }
+
+  const ageMs = now - session.createdAt;
+  const expired = ageMs > SESSION_TTL_MS;
+
+  if (expired) {
+    sessions.delete(sessionId);
+    console.log("[SESSION] getSession", {
+      sessionId: `${sessionId.slice(0, 8)}...`,
+      found: true,
+      expired: true,
+      ageMs,
+    });
+    return undefined;
+  }
+
+  console.log("[SESSION] getSession", {
+    sessionId: `${sessionId.slice(0, 8)}...`,
+    found: true,
+    expired: false,
+    ageMs,
+  });
   return session;
 }
 
@@ -51,4 +83,5 @@ module.exports = {
   createSession,
   getSession,
   deleteSession,
+  SESSION_TTL_MS,
 };
