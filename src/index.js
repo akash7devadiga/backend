@@ -11,6 +11,7 @@ const profileRoutes = require("./routes/profile");
 const systemRoutes = require("./routes/system");
 const auditRoutes = require("./routes/audit");
 const manualUploadRoutes = require("./routes/manualUpload");
+const returnSerialsRoutes = require("./routes/returnSerials");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -28,8 +29,9 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/system", systemRoutes);
 app.use("/api/audit", auditRoutes);
 app.use("/api/manual-upload", manualUploadRoutes);
+app.use("/api/return-serials", returnSerialsRoutes);
 
 app.listen(PORT, () => {
   console.log("[SERVER] Stub API server started", { port: PORT, baseUrl: `http://localhost:${PORT}` });
-  console.log("[SERVER] Routes: GET /health, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, POST /api/auth/change-password, GET /api/profile/me, GET /api/system/info, GET /api/audit/logs, POST /api/manual-upload");
+  console.log("[SERVER] Routes: GET /health, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, POST /api/auth/change-password, GET /api/profile/me, GET /api/system/info, GET /api/audit/logs, POST /api/manual-upload, GET /api/return-serials/orders, POST /api/return-serials/return");
 });
